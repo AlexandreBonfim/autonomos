@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_24_100829) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_24_101036) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_100829) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "client_id", null: false
+    t.string "number"
+    t.string "series"
+    t.date "issued_on"
+    t.date "due_on"
+    t.string "currency"
+    t.integer "subtotal_cents"
+    t.decimal "iva_rate", precision: 5, scale: 2
+    t.integer "iva_amount_cents"
+    t.decimal "irpf_rate", precision: 5, scale: 2
+    t.integer "irpf_withheld_cents"
+    t.integer "total_cents"
+    t.string "status"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_invoices_on_client_id"
+    t.index ["number"], name: "index_invoices_on_number"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "name"
@@ -76,4 +99,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_100829) do
   add_foreign_key "clients", "users"
   add_foreign_key "documents", "users"
   add_foreign_key "expenses", "users"
+  add_foreign_key "invoices", "clients"
+  add_foreign_key "invoices", "users"
 end
