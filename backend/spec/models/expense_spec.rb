@@ -30,5 +30,17 @@
 require 'rails_helper'
 
 RSpec.describe Expense, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'returns net base and deductible amount' do
+    exp = described_class.new(
+      total_cents: 121_00,
+      currency: 'EUR',
+      iva_amount_cents: 21_00,
+      irpf_withheld_cents: 0,
+      deductible_percent: 100,
+      issued_on: Date.today
+    )
+
+    expect(exp.net_base_cents).to eq(100_00)
+    expect(exp.deductible_cents).to eq(100_00)
+  end
 end

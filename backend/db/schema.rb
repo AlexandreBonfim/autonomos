@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_24_101036) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "bank_txns", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "external_id"
+    t.date "occurred_on"
+    t.integer "amount_cents"
+    t.string "currency"
+    t.string "description"
+    t.jsonb "raw_payload"
+    t.string "source"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_bank_txns_on_external_id"
+    t.index ["user_id"], name: "index_bank_txns_on_user_id"
+  end
 
   create_table "clients", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -85,6 +101,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101036) do
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
+  create_table "reconciliations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "bank_txn_id", null: false
+    t.string "matchable_type", null: false
+    t.bigint "matchable_id", null: false
+    t.decimal "matched_amount", precision: 12, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_txn_id"], name: "index_reconciliations_on_bank_txn_id"
+    t.index ["matchable_type", "matchable_id"], name: "index_reconciliations_on_matchable"
+    t.index ["user_id"], name: "index_reconciliations_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "name"
@@ -96,9 +125,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101036) do
     t.index ["tax_id"], name: "index_users_on_tax_id"
   end
 
+  add_foreign_key "bank_txns", "users"
   add_foreign_key "clients", "users"
   add_foreign_key "documents", "users"
   add_foreign_key "expenses", "users"
   add_foreign_key "invoices", "clients"
   add_foreign_key "invoices", "users"
+  add_foreign_key "reconciliations", "bank_txns"
+  add_foreign_key "reconciliations", "users"
 end

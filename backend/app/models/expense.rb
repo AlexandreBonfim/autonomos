@@ -33,7 +33,7 @@ class Expense < ApplicationRecord
 
   validates :currency, :issued_on, presence: true
 
-  enum status: { pending: "pending", reconciled: "reconciled" }, _default: "pending" # make a const file later
+  enum :status, { pending: "pending", reconciled: "reconciled" } # make a const file later
 
   def net_base_cents
     total_cents - iva_amount_cents + irpf_withheld_cents
