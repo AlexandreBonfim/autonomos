@@ -36,10 +36,16 @@ class Expense < ApplicationRecord
   enum :status, { pending: "pending", reconciled: "reconciled" } # make a const file later
 
   def net_base_cents
-    total_cents - iva_amount_cents + irpf_withheld_cents
+    return 0 if total_cents.nil?
+
+    base = total_cents
+    base -= iva_amount_cents if iva_amount_cents
+    base += irpf_withheld_cents if irpf_withheld_cents
+    base
   end
 
   def deductible_cents
+    return 0 if deductible_percent.nil?
     (net_base_cents * (deductible_percent.to_d / 100)).to_i
   end
 end
