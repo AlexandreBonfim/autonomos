@@ -1,5 +1,5 @@
 class Api::V1::ExpensesController < ApplicationController
-  before_action :set_expense, only: %i[show update]
+  before_action :authenticate!, :set_expense, only: %i[show update]
 
   def index
     expenses = current_user.expenses.order(issued_on: :desc) # stub current_user for now
