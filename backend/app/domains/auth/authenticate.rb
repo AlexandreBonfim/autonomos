@@ -1,3 +1,5 @@
+require_relative "jwt_config"
+
 module Auth
   class Authenticate
     Result = Struct.new(:ok?, :user, :error, keyword_init: true)
@@ -9,7 +11,7 @@ module Auth
 
       return Result.new(ok?: false, error: :bad_scheme) unless scheme&.casecmp("Bearer")&.zero?
 
-      decoded = JWT.decode(token, JWTConfig.secret_key, true, { algorithm: JWTConfig.algorithm })
+      decoded = JWT.decode(token, Auth::JWTConfig.secret_key, true, { algorithm: Auth::JWTConfig.algorithm })
       payload = decoded.first
       user = User.find_by(id: payload["sub"], email: payload["email"])
 

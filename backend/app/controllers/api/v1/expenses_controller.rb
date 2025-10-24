@@ -1,8 +1,9 @@
 class Api::V1::ExpensesController < ApplicationController
-  before_action :authenticate!, :set_expense, only: %i[show update]
+  before_action :authenticate!
+  before_action :set_expense, only: %i[show update]
 
   def index
-    expenses = current_user.expenses.order(issued_on: :desc) # stub current_user for now
+    expenses = current_user.expenses.order(issued_on: :desc)
     render json: expenses.map { |e| serialize(e) }
   end
 
@@ -39,11 +40,6 @@ class Api::V1::ExpensesController < ApplicationController
       :irpf_rate, :irpf_withheld_cents, :deductible_percent, :issued_on,
       :supplier_name, :supplier_tax_id, :document_id, :category, :status
     )
-  end
-
-  def current_user
-    # TEMP: replace later with JWT auth. For now pick User.first
-    @current_user ||= User.first || User.create!(email: "demo@local", name: "Demo")
   end
 
   def serialize(e)
