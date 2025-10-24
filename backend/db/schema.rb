@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_24_131420) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -114,6 +114,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
     t.index ["user_id"], name: "index_reconciliations_on_user_id"
   end
 
+  create_table "tax_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.decimal "default_iva_rate", precision: 5, scale: 2
+    t.decimal "default_irpf_rate", precision: 5, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_tax_profiles_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "name"
@@ -133,4 +143,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
   add_foreign_key "invoices", "users"
   add_foreign_key "reconciliations", "bank_txns"
   add_foreign_key "reconciliations", "users"
+  add_foreign_key "tax_profiles", "users"
 end
