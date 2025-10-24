@@ -101,7 +101,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
-<<<<<<< HEAD
   create_table "reconciliations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "bank_txn_id", null: false
@@ -115,8 +114,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
     t.index ["user_id"], name: "index_reconciliations_on_user_id"
   end
 
-=======
->>>>>>> 4d54d17 (feat(billing): add Invoice model with IVA/IRPF fields)
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "name"
@@ -134,9 +131,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_101335) do
   add_foreign_key "expenses", "users"
   add_foreign_key "invoices", "clients"
   add_foreign_key "invoices", "users"
-<<<<<<< HEAD
   add_foreign_key "reconciliations", "bank_txns"
   add_foreign_key "reconciliations", "users"
-=======
->>>>>>> 4d54d17 (feat(billing): add Invoice model with IVA/IRPF fields)
 end
