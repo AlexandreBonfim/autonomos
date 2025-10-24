@@ -29,7 +29,10 @@
 
 class Expense < ApplicationRecord
   belongs_to :user
+  has_many :reconciliations, as: :matchable, dependent: :destroy
+
   validates :currency, :issued_on, presence: true
+
   enum status: { pending: "pending", reconciled: "reconciled" }, _default: "pending" # make a const file later
 
   def net_base_cents

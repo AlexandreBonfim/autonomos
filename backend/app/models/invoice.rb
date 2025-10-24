@@ -31,4 +31,5 @@
 class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :client
+  has_many :reconciliations, as: :matchable, dependent: :destroy
 end
