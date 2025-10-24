@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_24_100540) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_24_100829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_100540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_clients_on_user_id"
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "kind"
+    t.string "status"
+    t.string "original_filename"
+    t.string "content_type"
+    t.integer "size_bytes"
+    t.string "storage_key"
+    t.jsonb "metadata"
+    t.jsonb "parsed_payload"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
   create_table "expenses", force: :cascade do |t|
@@ -59,5 +74,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_100540) do
   end
 
   add_foreign_key "clients", "users"
+  add_foreign_key "documents", "users"
   add_foreign_key "expenses", "users"
 end
