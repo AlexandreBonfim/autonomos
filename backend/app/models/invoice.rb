@@ -31,8 +31,6 @@
 class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :client
-<<<<<<< HEAD
+
   has_many :reconciliations, as: :matchable, dependent: :destroy
-=======
->>>>>>> 4d54d17 (feat(billing): add Invoice model with IVA/IRPF fields)
 end
