@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       post "auth/signup", to: "sessions#signup"
       post "auth/login",  to: "sessions#login"
 
+      resources :reconciliations, only: [:create]
       resources :expenses, only: %i[index show create update]
       resources :documents, only: [:create, :show]
       resources :invoices, only: %i[index show create update] do
