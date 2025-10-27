@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_24_132259) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_27_113717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -78,6 +78,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_132259) do
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
+  create_table "invoice_items", force: :cascade do |t|
+    t.bigint "invoice_id", null: false
+    t.string "description"
+    t.integer "quantity"
+    t.integer "unit_price_cents"
+    t.integer "discount_cents"
+    t.decimal "iva_rate", precision: 5, scale: 2
+    t.decimal "irpf_rate", precision: 5, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "client_id", null: false
@@ -139,6 +152,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_24_132259) do
   add_foreign_key "clients", "users"
   add_foreign_key "documents", "users"
   add_foreign_key "expenses", "users"
+  add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoices", "clients"
   add_foreign_key "invoices", "users"
   add_foreign_key "reconciliations", "bank_txns"
