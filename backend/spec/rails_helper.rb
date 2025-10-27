@@ -52,6 +52,9 @@ RSpec.configure do |config|
   config.around(:each) do |example|
     DatabaseCleaner.cleaning { example.run }
   end
+  config.before(:each) do
+    ActiveJob::Base.queue_adapter = :test
+  end
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
 
