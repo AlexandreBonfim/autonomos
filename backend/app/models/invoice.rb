@@ -31,6 +31,14 @@
 class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :client
-
+  has_many :invoice_items, dependent: :destroy
   has_many :reconciliations, as: :matchable, dependent: :destroy
+
+  accepts_nested_attributes_for :invoice_items, allow_destroy: true
+  enum :status, { draft: 'draft', issued: 'issued', paid: 'paid', canceled: 'canceled' }, default: 'draft'
+
+  validates :currency, :issued_on, presence: true
+  validates :number, presence: true, uniqueness: { scope: [:user_id, :series] }
+
+  # NOTE: totals are computed via Billing::InvoiceCalculator before save
 end
