@@ -17,5 +17,6 @@
 #
 
 class Client < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, inverse_of: :clients
+  has_many :invoices, dependent: :nullify, inverse_of: :client
 end

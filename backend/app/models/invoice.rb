@@ -29,8 +29,8 @@
 #
 
 class Invoice < ApplicationRecord
-  belongs_to :user
-  belongs_to :client
+  belongs_to :user,   inverse_of: :invoices
+  belongs_to :client, inverse_of: :invoices
   has_many :invoice_items, dependent: :destroy
   has_many :reconciliations, as: :matchable, dependent: :destroy
 

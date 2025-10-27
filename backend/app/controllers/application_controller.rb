@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
 
   def authenticate!
     result = Auth::Authenticate.call(request.headers["Authorization"])
+
     if result.ok?
       @current_user = result.user
     else

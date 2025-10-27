@@ -18,7 +18,13 @@
 
 class User < ApplicationRecord
   has_secure_password
-  has_many :expenses, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
+
+  has_many :clients,        dependent: :destroy, inverse_of: :user
+  has_many :invoices,       dependent: :destroy, inverse_of: :user
+  has_many :expenses,       dependent: :destroy, inverse_of: :user
+  has_many :documents,      dependent: :destroy, inverse_of: :user
+  has_many :bank_txns,      dependent: :destroy, inverse_of: :user
+  has_many :reconciliations,dependent: :destroy, inverse_of: :user
 end
