@@ -6,7 +6,7 @@ class OcrParseJob < ApplicationJob
     doc.update!(status: :parsing)
 
     # In real life: call OCR engine, fill parsed_payload
-    parsed = Domains::Ocr::SimpleParser.call(doc)
+    parsed = Ocr::SimpleParser.call(doc)
     doc.update!(parsed_payload: parsed)
 
     expense = Expenses::OcrToExpense.call(doc.user, parsed)
