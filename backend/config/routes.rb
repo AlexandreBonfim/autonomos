@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       post "auth/login",  to: "sessions#login"
 
       resources :expenses, only: %i[index show create update]
+      resources :documents, only: [:create, :show]
       resources :invoices, only: %i[index show create update] do
         member do
           post :issue   # optional future endpoint to lock number/series
