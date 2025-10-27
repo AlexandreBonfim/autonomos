@@ -40,5 +40,16 @@ class Invoice < ApplicationRecord
   validates :currency, :issued_on, presence: true
   validates :number, presence: true, uniqueness: { scope: [:user_id, :series] }
 
-  # NOTE: totals are computed via Billing::InvoiceCalculator before save
+  before_save :compute_totals
+
+  private
+  # totals are computed via Billing::InvoiceCalculator before save
+  def compute_totals
+    out = Billing::InvoiceCalculator.call(self)
+
+    self.subtotal_cents       = out.subtotal_cents
+    self.iva_amount_cents     = out.iva_amount_cents
+    self.irpf_withheld_cents  = out.irpf_withheld_cents
+    self.total_cents          = out.total_cents
+  end
 end
