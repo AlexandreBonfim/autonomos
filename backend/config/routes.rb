@@ -13,6 +13,14 @@ Rails.application.routes.draw do
           post :cancel
         end
       end
+      resources :bank_txns, only: %i[index show create] do
+        collection do
+          post :import_csv  # body: { csv: "date,description,amount,..." }
+        end
+        member do
+          get :candidates # matching expenses/invoices
+        end
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
