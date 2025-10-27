@@ -23,6 +23,7 @@
 class Document < ApplicationRecord
   belongs_to :user
 
-  enum status: { uploaded: 'uploaded', parsing: 'parsing', parsed: 'parsed', failed: 'failed' }, default: 'uploaded'
+  enum :status, { uploaded: 'uploaded', parsing: 'parsing', parsed: 'parsed', failed: 'failed' }, default: 'uploaded'
+
   validates :kind, presence: true
 end
