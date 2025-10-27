@@ -3,7 +3,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "auth/signup", to: "sessions#signup"
       post "auth/login",  to: "sessions#login"
+
       resources :expenses, only: %i[index show create update]
+      resources :invoices, only: %i[index show create update] do
+        member do
+          post :issue   # optional future endpoint to lock number/series
+          post :mark_paid
+          post :cancel
+        end
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
