@@ -36,10 +36,10 @@ module Banking
     end
 
     def self.to_cents(s)
-      str = s.to_s.strip
-      sign = str.start_with?('-') ? -1 : 1
-      num = str.tr('+', '').tr('.', '').tr(',', '.').to_f
-      (num.abs * 100).round * sign
+      # Accepts formats like "+123.45" or "-123,45"
+      # Normalize: remove "+" signs, convert comma decimals to dot, keep the minus if present
+      normalized = s.to_s.strip.tr('+', '').tr(',', '.')
+      (normalized.to_f * 100).round
     end
   end
 end

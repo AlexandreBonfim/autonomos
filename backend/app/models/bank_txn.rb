@@ -24,7 +24,7 @@
 class BankTxn < ApplicationRecord
   belongs_to :user
 
-  enum status: { unreconciled: 'unreconciled', reconciled: 'reconciled' }
+  enum :status, { unreconciled: 'unreconciled', reconciled: 'reconciled' }
 
   validates :occurred_on, :amount_cents, :currency, :description, presence: true
   validates :amount_cents, numericality: { other_than: 0 }
