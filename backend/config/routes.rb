@@ -22,6 +22,11 @@ Rails.application.routes.draw do
           get :candidates # matching expenses/invoices
         end
       end
+
+      namespace :tax do
+        get 'periods/:year/q/:q', to: 'summaries#quarter'
+        get 'periods/:year/m/:m', to: 'summaries#month'
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
