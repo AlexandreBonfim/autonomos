@@ -22,8 +22,8 @@ module Taxation
     def self.call(user:, period:)
       from, to = period.from, period.to
 
-      invs = user.invoices.where(issued_on: from..to)
-      exps = user.expenses.where(issued_on: from..to)
+      invs = user.invoices.in_period(from, to)
+      exps = user.expenses.in_period(from, to)
 
       base_invoices  = invs.sum(:subtotal_cents)
       iva_repercut   = invs.sum(:iva_amount_cents)

@@ -42,6 +42,8 @@ class Invoice < ApplicationRecord
 
   before_save :compute_totals
 
+  scope :in_period, ->(from, to) { where(issued_on: from..to) }
+  
   private
   # totals are computed via Billing::InvoiceCalculator before save
   def compute_totals

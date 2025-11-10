@@ -35,6 +35,8 @@ class Expense < ApplicationRecord
 
   enum :status, { pending: "pending", reconciled: "reconciled" } # make a const file later
 
+  scope :in_period, ->(from, to) { where(issued_on: from..to) }
+  
   def net_base_cents
     return 0 if total_cents.nil?
 
