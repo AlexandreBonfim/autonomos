@@ -23,9 +23,10 @@
 #
 # Indexes
 #
-#  index_invoices_on_client_id  (client_id)
-#  index_invoices_on_number     (number)
-#  index_invoices_on_user_id    (user_id)
+#  idx_invoices_unique_per_series  (user_id,series,number,issued_on) UNIQUE
+#  index_invoices_on_client_id     (client_id)
+#  index_invoices_on_number        (number)
+#  index_invoices_on_user_id       (user_id)
 #
 
 class Invoice < ApplicationRecord

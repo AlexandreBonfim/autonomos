@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_27_113717) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_10_154244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -91,6 +91,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_27_113717) do
     t.index ["invoice_id"], name: "index_invoice_items_on_invoice_id"
   end
 
+  create_table "invoice_sequences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "series"
+    t.integer "year"
+    t.integer "last_number", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "series", "year"], name: "index_invoice_sequences_on_user_id_and_series_and_year", unique: true
+    t.index ["user_id"], name: "index_invoice_sequences_on_user_id"
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "client_id", null: false
@@ -111,6 +122,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_27_113717) do
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_invoices_on_client_id"
     t.index ["number"], name: "index_invoices_on_number"
+    t.index ["user_id", "series", "number", "issued_on"], name: "idx_invoices_unique_per_series", unique: true
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
@@ -153,6 +165,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_27_113717) do
   add_foreign_key "documents", "users"
   add_foreign_key "expenses", "users"
   add_foreign_key "invoice_items", "invoices"
+  add_foreign_key "invoice_sequences", "users"
   add_foreign_key "invoices", "clients"
   add_foreign_key "invoices", "users"
   add_foreign_key "reconciliations", "bank_txns"
