@@ -1,0 +1,14 @@
+:root {
+    --bg: #ffffff;
+    --bg-soft: #f7f7f7;
+    --primary: #60d38d;
+    --text: #000000;
+  }
+  
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    background: var(--bg-soft);
+    color: var(--text);
+  }
+  
