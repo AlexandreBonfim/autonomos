@@ -39,7 +39,7 @@ class Invoice < ApplicationRecord
   enum :status, { draft: 'draft', issued: 'issued', paid: 'paid', canceled: 'canceled' }, default: 'draft'
 
   validates :currency, :issued_on, presence: true
-  validates :number, presence: true, uniqueness: { scope: [:user_id, :series] }
+  validates :number, presence: true, uniqueness: { scope: [:user_id, :series] }, if: :issued?
   validates :series, presence: true
 
   before_save :compute_totals
@@ -59,17 +59,21 @@ class Invoice < ApplicationRecord
   end
 
   def prevent_mutations_if_issued
-    return unless issued? || paid? || canceled?
+    # Allow transition from draft to issued/paid/canceled (initial issue)
+    return if status_was == 'draft' && will_save_change_to_status?
     
-    if will_save_change_to_series? || will_save_change_to_number? || invoice_items.any?(&:changed?) || changed?
-      # allow only status transitions / due_on / notes after issue
-      allowed = %w[status due_on notes]
-      disallowed = (changed_attribute_names_to_save - allowed)
-      
-      if disallowed.any? || invoice_items.any?(&:changed?)
-        errors.add(:base, "Issued invoices cannot be modified (immutable).")
-        throw :abort
-      end
+    # Only prevent mutations if invoice was already issued/paid/canceled before this update
+    was_immutable = status_was == 'issued' || status_was == 'paid' || status_was == 'canceled'
+    return unless was_immutable
+    
+    # Allow status transitions (e.g., issued -> paid, issued -> canceled)
+    # Allow changes to due_on and notes
+    allowed = %w[status due_on notes]
+    disallowed = (changed_attribute_names_to_save - allowed)
+    
+    if disallowed.any? || invoice_items.any?(&:changed?)
+      errors.add(:base, "Issued invoices cannot be modified (immutable).")
+      throw :abort
     end
   end
 end

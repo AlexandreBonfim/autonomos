@@ -29,10 +29,30 @@ class Api::V1::InvoicesController < ApplicationController
     end
   end
 
-  # stubs for later:
-  def issue; head :not_implemented; end
-  def mark_paid; head :not_implemented; end
-  def cancel; head :not_implemented; end
+  def issue
+    Billing::IssueInvoice.call(@invoice)
+    render json: serialize(@invoice), status: :ok
+  rescue Billing::IssueInvoice::Error => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  def mark_paid
+    if @invoice.issued?
+      @invoice.update!(status: :paid)
+      render json: serialize(@invoice)
+    else
+      render json: { error: "Only issued invoices can be marked as paid" }, status: :unprocessable_entity
+    end
+  end
+
+  def cancel
+    if @invoice.issued?
+      @invoice.update!(status: :canceled)
+      render json: serialize(@invoice)
+    else
+      render json: { error: "Only issued invoices can be canceled" }, status: :unprocessable_entity
+    end
+  end
 
   private
 
