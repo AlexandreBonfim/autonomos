@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: backend_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      - db
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:postgres@db:5432/backend_development
+    ports:
+      - "3000:80"
+    volumes:
+      - ./backend:/rails
+    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "80"]
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    environment:
+      # Frontend talks to backend via host-mapped port 3000
+      VITE_API_BASE_URL: "http://localhost:3000/api/v1"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: ["pnpm", "dev", "--host", "0.0.0.0", "--port", "5173"]
+
+volumes:
+  db-data:
+
